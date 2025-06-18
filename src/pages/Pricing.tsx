@@ -74,7 +74,7 @@ const Pricing = () => {
               Simple, Transparent Pricing
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Choose the plan that fits your needs. 14-day money-back guarantee.
+              Choose the plan that fits your needs. 14-day money-back guarantee for all paid plans.
             </p>
           </div>
 
@@ -128,7 +128,7 @@ const Pricing = () => {
               Questions? We're here to help.
             </h2>
             <p className="text-gray-600 mb-8">
-              All plans come with a 14-day money-back guarantee. No questions asked.
+              We offer a 14-day money-back guarantee for all paid plans. If you're not satisfied within the first 14 days, contact our support team for a full refund.
             </p>
             <Button variant="outline">
               <a href="/faqs">View All FAQs</a>
