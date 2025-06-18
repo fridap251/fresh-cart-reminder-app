@@ -1,4 +1,3 @@
-
 import { Header } from '@/components/Header';
 import {
   Accordion,
@@ -15,7 +14,7 @@ const FAQs = () => {
     },
     {
       question: 'Is Grocery Reminders free to use?',
-      answer: 'Yes! We offer a free plan that includes up to 50 grocery items and basic recurring reminders. For more advanced features like unlimited items, family sharing, and analytics, check out our Pro and Family plans.',
+      answer: 'We offer Pro and Family subscription plans. Check out our pricing page to see which plan fits your needs best.',
     },
     {
       question: 'Can I share my grocery lists with family members?',
@@ -47,7 +46,7 @@ const FAQs = () => {
     },
     {
       question: 'Do you offer refunds?',
-      answer: 'We offer a 30-day money-back guarantee for all paid plans. If you\'re not satisfied within the first 30 days, contact our support team for a full refund.',
+      answer: 'We offer a 14-day money-back guarantee for all paid plans. If you\'re not satisfied within the first 14 days, contact our support team for a full refund.',
     },
   ];
 
