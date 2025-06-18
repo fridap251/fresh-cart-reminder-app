@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { GroceryItemType, GroceryItemFrequency } from '@/types';
 import { AddGroceryForm } from '@/components/AddGroceryForm';
 import { GroceryList } from '@/components/GroceryList';
+import { Header } from '@/components/Header';
 import { List } from 'lucide-react';
 
 const Index = () => {
@@ -56,6 +57,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <Header />
+      
       <div className="container mx-auto max-w-2xl p-4 sm:p-8">
         <header className="text-center mb-10">
           <div className="flex items-center justify-center gap-3 mb-2">
