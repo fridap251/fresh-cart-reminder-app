@@ -9,8 +9,7 @@ export const Header = () => {
   const location = useLocation();
 
   const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'About', href: '/about' },
+    { name: 'About', href: '/' },
     { name: 'Pricing', href: '/pricing' },
     { name: 'FAQs', href: '/faqs' },
   ];

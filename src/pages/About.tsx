@@ -1,6 +1,8 @@
 
 import { Header } from '@/components/Header';
-import { List, Clock, Smartphone, Heart } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { List, Clock, Smartphone, Heart, Users, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const About = () => {
   const features = [
@@ -24,6 +26,16 @@ const About = () => {
       title: 'Simple & Beautiful',
       description: 'Clean, intuitive design that makes grocery planning a joy instead of a chore.',
     },
+    {
+      icon: Users,
+      title: 'Family Sharing',
+      description: 'Share lists with family members and collaborate on shopping together.',
+    },
+    {
+      icon: Zap,
+      title: 'Smart Analytics',
+      description: 'Track your shopping patterns and optimize your grocery budget.',
+    },
   ];
 
   return (
@@ -32,27 +44,44 @@ const About = () => {
       
       <main>
         {/* Hero Section */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/5 to-primary/10">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">
-              About Grocery Reminders
-            </h1>
+            <div className="flex items-center justify-center gap-3 mb-6">
+              <List className="h-12 w-12 text-primary" />
+              <h1 className="text-5xl sm:text-6xl font-bold text-gray-900">
+                Grocery Reminders
+              </h1>
+            </div>
             <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              We're on a mission to make grocery shopping simpler, smarter, and more efficient. 
-              No more forgotten items, no more emergency store runs - just organized, stress-free shopping.
+              Never forget an item again. Smart grocery lists with automatic reminders that adapt to your shopping habits.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/signup">
+                <Button size="lg" className="w-full sm:w-auto">
+                  Start Free Trial
+                </Button>
+              </Link>
+              <Link to="/pricing">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                  View Pricing
+                </Button>
+              </Link>
+            </div>
+            <p className="text-sm text-gray-500 mt-4">
+              14-day free trial • No credit card required
             </p>
           </div>
         </section>
 
         {/* Features Section */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+        <section className="py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-              Why Choose Grocery Reminders?
+              Everything you need for smarter shopping
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => (
-                <div key={index} className="text-center">
+                <div key={index} className="text-center p-6 rounded-lg hover:shadow-lg transition-shadow">
                   <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
                     <feature.icon className="h-8 w-8 text-primary" />
                   </div>
@@ -68,31 +97,56 @@ const About = () => {
           </div>
         </section>
 
-        {/* Story Section */}
-        <section className="py-16 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
-              Our Story
+        {/* CTA Section */}
+        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Ready to transform your grocery shopping?
             </h2>
-            <div className="prose prose-lg mx-auto text-gray-600">
-              <p>
-                Grocery Reminders was born from a simple frustration: constantly forgetting essential items 
-                at the grocery store. We realized that most people struggle with the same problem - keeping 
-                track of what they need, when they need it, and how often.
-              </p>
-              <p>
-                Our team of passionate developers and design enthusiasts came together to create a solution 
-                that's both powerful and beautifully simple. We believe that the best tools are the ones 
-                you barely notice using - they just work, seamlessly integrating into your daily routine.
-              </p>
-              <p>
-                Today, thousands of users rely on Grocery Reminders to keep their pantries stocked and 
-                their shopping trips efficient. We're constantly improving and adding new features based 
-                on user feedback, because your grocery shopping experience matters to us.
-              </p>
-            </div>
+            <p className="text-lg text-gray-600 mb-8">
+              Join thousands of users who have already simplified their shopping routine.
+            </p>
+            <Link to="/signup">
+              <Button size="lg">
+                Get Started Today
+              </Button>
+            </Link>
           </div>
         </section>
+
+        {/* Footer */}
+        <footer className="bg-white border-t border-gray-200 py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+              <div className="col-span-1 md:col-span-2">
+                <div className="flex items-center gap-2 mb-4">
+                  <List className="h-8 w-8 text-primary" />
+                  <span className="text-xl font-bold text-gray-900">Grocery Reminders</span>
+                </div>
+                <p className="text-gray-600 max-w-md">
+                  Making grocery shopping simpler, smarter, and more efficient for everyone.
+                </p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-4">Product</h4>
+                <ul className="space-y-2 text-gray-600">
+                  <li><Link to="/pricing" className="hover:text-primary">Pricing</Link></li>
+                  <li><Link to="/faqs" className="hover:text-primary">FAQs</Link></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-4">Legal</h4>
+                <ul className="space-y-2 text-gray-600">
+                  <li><Link to="/terms" className="hover:text-primary">Terms & Conditions</Link></li>
+                  <li><Link to="/privacy" className="hover:text-primary">Privacy Policy</Link></li>
+                </ul>
+              </div>
+            </div>
+            <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-500">
+              <p>&copy; 2024 Grocery Reminders. All rights reserved.</p>
+            </div>
+          </div>
+        </footer>
       </main>
     </div>
   );

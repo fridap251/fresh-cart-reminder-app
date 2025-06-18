@@ -2,64 +2,78 @@
 import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Check, X } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 const Pricing = () => {
   const plans = [
     {
-      name: 'Free',
-      price: '$0',
-      period: 'forever',
-      description: 'Perfect for getting started with basic grocery planning.',
-      features: [
-        'Up to 50 grocery items',
-        'Basic recurring reminders',
-        'Mobile access',
-        'Standard support',
-      ],
-      limitations: [
-        'No advanced analytics',
-        'No family sharing',
-        'No custom categories',
-      ],
-      popular: false,
-    },
-    {
       name: 'Pro',
-      price: '$4.99',
+      price: '$5',
       period: 'per month',
-      description: 'For serious planners who want the complete experience.',
+      description: 'Perfect for individuals who want advanced grocery planning.',
       features: [
         'Unlimited grocery items',
         'Advanced recurring patterns',
-        'Family sharing (up to 5 members)',
         'Custom categories & tags',
         'Shopping analytics',
         'Priority support',
         'Dark mode',
         'Export capabilities',
+        'Mobile app access',
       ],
-      limitations: [],
+      paddleProductId: 'pro_monthly', // Replace with actual Paddle product ID
       popular: true,
     },
     {
       name: 'Family',
-      price: '$9.99',
+      price: '$10',
       period: 'per month',
-      description: 'Perfect for large families and households.',
+      description: 'Perfect for families and households.',
       features: [
         'Everything in Pro',
         'Unlimited family members',
         'Multiple shopping lists',
+        'Family sharing & collaboration',
         'Meal planning integration',
         'Advanced notifications',
         'Dedicated account manager',
         'Custom integrations',
       ],
-      limitations: [],
+      paddleProductId: 'family_monthly', // Replace with actual Paddle product ID
+      popular: false,
+    },
+    {
+      name: 'Lifetime',
+      price: '$99',
+      period: 'one-time payment',
+      description: 'Get all Pro features forever with a single payment.',
+      features: [
+        'All Pro features included',
+        'Lifetime access',
+        'No recurring payments',
+        'Future updates included',
+        'Priority support',
+        'Early access to new features',
+      ],
+      paddleProductId: 'lifetime', // Replace with actual Paddle product ID
       popular: false,
     },
   ];
+
+  const handleCheckout = (paddleProductId: string) => {
+    // Paddle checkout integration
+    if (typeof window !== 'undefined' && (window as any).Paddle) {
+      (window as any).Paddle.Checkout.open({
+        product: paddleProductId,
+        email: '', // Optional: pre-fill customer email
+        country: '', // Optional: pre-fill customer country
+        postcode: '', // Optional: pre-fill customer postcode
+      });
+    } else {
+      console.error('Paddle.js not loaded');
+      // Fallback: redirect to a payment page or show error
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -73,7 +87,7 @@ const Pricing = () => {
               Simple, Transparent Pricing
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Choose the plan that fits your needs. Start free and upgrade when you're ready.
+              Choose the plan that fits your needs. Start with our 14-day free trial.
             </p>
           </div>
 
@@ -103,8 +117,9 @@ const Pricing = () => {
                   <Button 
                     className={`w-full mb-6 ${plan.popular ? 'bg-primary' : ''}`}
                     variant={plan.popular ? 'default' : 'outline'}
+                    onClick={() => handleCheckout(plan.paddleProductId)}
                   >
-                    {plan.name === 'Free' ? 'Get Started' : 'Start Free Trial'}
+                    Start Free Trial
                   </Button>
                   
                   <div className="space-y-3">
@@ -112,12 +127,6 @@ const Pricing = () => {
                       <div key={featureIndex} className="flex items-center">
                         <Check className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
                         <span className="text-gray-700">{feature}</span>
-                      </div>
-                    ))}
-                    {plan.limitations.map((limitation, limitIndex) => (
-                      <div key={limitIndex} className="flex items-center opacity-60">
-                        <X className="h-5 w-5 text-gray-400 mr-3 flex-shrink-0" />
-                        <span className="text-gray-500">{limitation}</span>
                       </div>
                     ))}
                   </div>
@@ -129,17 +138,27 @@ const Pricing = () => {
           {/* FAQ Section */}
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Frequently Asked Questions
+              Questions? We're here to help.
             </h2>
             <p className="text-gray-600 mb-8">
-              Have questions? We're here to help.
+              All plans come with a 14-day free trial. Cancel anytime.
             </p>
             <Button variant="outline">
-              View All FAQs
+              <a href="/faqs">View All FAQs</a>
             </Button>
           </div>
         </div>
       </main>
+
+      {/* Paddle.js Script */}
+      <script 
+        src="https://cdn.paddle.com/paddle/paddle.js"
+        onLoad={() => {
+          if (typeof window !== 'undefined' && (window as any).Paddle) {
+            (window as any).Paddle.Setup({ vendor: 12345 }); // Replace with your Paddle vendor ID
+          }
+        }}
+      />
     </div>
   );
 };
