@@ -38,24 +38,11 @@ const Pricing = () => {
         'Advanced notifications',
         'Dedicated account manager',
         'Custom integrations',
-      ],
-      paddleProductId: 'family_monthly', // Replace with actual Paddle product ID
-      popular: false,
-    },
-    {
-      name: 'Lifetime',
-      price: '$99',
-      period: 'one-time payment',
-      description: 'Get all Pro features forever with a single payment.',
-      features: [
-        'All Pro features included',
         'Lifetime access',
-        'No recurring payments',
         'Future updates included',
-        'Priority support',
         'Early access to new features',
       ],
-      paddleProductId: 'lifetime', // Replace with actual Paddle product ID
+      paddleProductId: 'family_monthly', // Replace with actual Paddle product ID
       popular: false,
     },
   ];
@@ -87,12 +74,12 @@ const Pricing = () => {
               Simple, Transparent Pricing
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Choose the plan that fits your needs. Start with our 14-day free trial.
+              Choose the plan that fits your needs. 14-day money-back guarantee.
             </p>
           </div>
 
           {/* Pricing Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 max-w-4xl mx-auto">
             {plans.map((plan, index) => (
               <Card 
                 key={index} 
@@ -119,7 +106,7 @@ const Pricing = () => {
                     variant={plan.popular ? 'default' : 'outline'}
                     onClick={() => handleCheckout(plan.paddleProductId)}
                   >
-                    Start Free Trial
+                    Get Started
                   </Button>
                   
                   <div className="space-y-3">
@@ -141,7 +128,7 @@ const Pricing = () => {
               Questions? We're here to help.
             </h2>
             <p className="text-gray-600 mb-8">
-              All plans come with a 14-day free trial. Cancel anytime.
+              All plans come with a 14-day money-back guarantee. No questions asked.
             </p>
             <Button variant="outline">
               <a href="/faqs">View All FAQs</a>
