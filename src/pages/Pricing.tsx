@@ -1,4 +1,5 @@
 
+import { useEffect } from 'react';
 import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,7 +22,7 @@ const Pricing = () => {
         'Export capabilities',
         'Mobile app access',
       ],
-      paddleProductId: 'pro_monthly', // Replace with actual Paddle product ID
+      paddleProductId: 'pri_01jy8xample1pro123', // Replace with your actual Paddle Pro product ID
       popular: true,
     },
     {
@@ -42,23 +43,63 @@ const Pricing = () => {
         'Future updates included',
         'Early access to new features',
       ],
-      paddleProductId: 'family_monthly', // Replace with actual Paddle product ID
+      paddleProductId: 'pri_01jy8xample2fam456', // Replace with your actual Paddle Family product ID
       popular: false,
     },
   ];
 
+  useEffect(() => {
+    // Initialize Paddle v2
+    const initializePaddle = () => {
+      if (typeof window !== 'undefined' && (window as any).Paddle) {
+        (window as any).Paddle.Environment.set('sandbox'); // Change to 'production' for live environment
+        (window as any).Paddle.Initialize({
+          token: 'test_your_client_side_token_here' // Replace with your actual Paddle client-side token
+        });
+      }
+    };
+
+    // Check if Paddle is already loaded
+    if (typeof window !== 'undefined' && (window as any).Paddle) {
+      initializePaddle();
+    } else {
+      // Wait for Paddle to load
+      const checkPaddle = setInterval(() => {
+        if (typeof window !== 'undefined' && (window as any).Paddle) {
+          initializePaddle();
+          clearInterval(checkPaddle);
+        }
+      }, 100);
+
+      // Cleanup interval after 10 seconds
+      setTimeout(() => clearInterval(checkPaddle), 10000);
+    }
+  }, []);
+
   const handleCheckout = (paddleProductId: string) => {
-    // Paddle checkout integration
+    // Paddle v2 checkout integration
     if (typeof window !== 'undefined' && (window as any).Paddle) {
       (window as any).Paddle.Checkout.open({
-        product: paddleProductId,
-        email: '', // Optional: pre-fill customer email
-        country: '', // Optional: pre-fill customer country
-        postcode: '', // Optional: pre-fill customer postcode
+        items: [
+          {
+            priceId: paddleProductId,
+            quantity: 1
+          }
+        ],
+        settings: {
+          displayMode: 'overlay',
+          theme: 'light',
+          locale: 'en'
+        },
+        customer: {
+          // Optional: pre-fill customer information
+          // email: 'customer@example.com'
+        }
       });
     } else {
-      console.error('Paddle.js not loaded');
-      // Fallback: redirect to a payment page or show error
+      console.error('Paddle.js not loaded or not initialized');
+      // Fallback: show error message to user
+      alert('Payment system is currently unavailable. Please try again later.');
     }
   };
 
@@ -137,15 +178,8 @@ const Pricing = () => {
         </div>
       </main>
 
-      {/* Paddle.js Script */}
-      <script 
-        src="https://cdn.paddle.com/paddle/paddle.js"
-        onLoad={() => {
-          if (typeof window !== 'undefined' && (window as any).Paddle) {
-            (window as any).Paddle.Setup({ vendor: 12345 }); // Replace with your Paddle vendor ID
-          }
-        }}
-      />
+      {/* Paddle v2 Script */}
+      <script src="https://cdn.paddle.com/paddle/v2/paddle.js" />
     </div>
   );
 };
