@@ -52,9 +52,9 @@ const Pricing = () => {
     // Initialize Paddle v2
     const initializePaddle = () => {
       if (typeof window !== 'undefined' && (window as any).Paddle) {
-        (window as any).Paddle.Environment.set('sandbox'); // Change to 'production' for live environment
+        (window as any).Paddle.Environment.set('production'); // Using production since you provided a live token
         (window as any).Paddle.Initialize({
-          token: 'test_your_client_side_token_here' // Replace with your actual Paddle client-side token
+          token: 'live_71951c428556655f03ffe84ad86' // Your actual Paddle client-side token
         });
       }
     };
