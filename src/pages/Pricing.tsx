@@ -22,7 +22,7 @@ const Pricing = () => {
         'Export capabilities',
         'Mobile app access',
       ],
-      paddleProductId: 'pri_01jy8xample1pro123', // Replace with your actual Paddle Pro product ID
+      paddleProductId: 'pri_01gsz8x8sawmvhz1pv30nge1ke', // Your actual Pro monthly product ID
       popular: true,
     },
     {
@@ -43,7 +43,7 @@ const Pricing = () => {
         'Future updates included',
         'Early access to new features',
       ],
-      paddleProductId: 'pri_01jy8xample2fam456', // Replace with your actual Paddle Family product ID
+      paddleProductId: 'pri_01gsz8z1q1n00f12qt82y31smh', // Your actual Pro yearly product ID (using as family for now)
       popular: false,
     },
   ];
@@ -54,8 +54,12 @@ const Pricing = () => {
       if (typeof window !== 'undefined' && (window as any).Paddle) {
         (window as any).Paddle.Environment.set('production'); // Using production since you provided a live token
         (window as any).Paddle.Initialize({
-          token: 'live_71951c428556655f03ffe84ad86' // Your actual Paddle client-side token
+          token: 'live_71951c428556655f03ffe84ad86', // Your actual Paddle client-side token
+          eventCallback: function (event: any) {
+            console.log("Paddle event:", event);
+          }
         });
+        console.log('Paddle initialized successfully');
       }
     };
 
@@ -79,23 +83,29 @@ const Pricing = () => {
   const handleCheckout = (paddleProductId: string) => {
     // Paddle v2 checkout integration
     if (typeof window !== 'undefined' && (window as any).Paddle) {
-      (window as any).Paddle.Checkout.open({
-        items: [
-          {
-            priceId: paddleProductId,
-            quantity: 1
+      try {
+        (window as any).Paddle.Checkout.open({
+          items: [
+            {
+              priceId: paddleProductId,
+              quantity: 1
+            }
+          ],
+          settings: {
+            displayMode: 'overlay',
+            theme: 'light',
+            locale: 'en',
+            variant: 'one-page'
+          },
+          customer: {
+            // Optional: pre-fill customer information
+            // email: 'customer@example.com'
           }
-        ],
-        settings: {
-          displayMode: 'overlay',
-          theme: 'light',
-          locale: 'en'
-        },
-        customer: {
-          // Optional: pre-fill customer information
-          // email: 'customer@example.com'
-        }
-      });
+        });
+      } catch (error) {
+        console.error('Checkout error:', error);
+        alert('Unable to open checkout. Please try again.');
+      }
     } else {
       console.error('Paddle.js not loaded or not initialized');
       // Fallback: show error message to user
