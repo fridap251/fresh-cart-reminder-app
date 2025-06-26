@@ -1,5 +1,6 @@
 
 import { useEffect } from 'react';
+import { initializePaddle, Paddle } from '@paddle/paddle-js';
 import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -49,42 +50,39 @@ const Pricing = () => {
   ];
 
   useEffect(() => {
-    // Initialize Paddle v2
-    const initializePaddle = () => {
-      if (typeof window !== 'undefined' && (window as any).Paddle) {
-        (window as any).Paddle.Environment.set('production'); // Using production since you provided a live token
-        (window as any).Paddle.Initialize({
+    let paddle: Paddle | undefined;
+
+    const setupPaddle = async () => {
+      try {
+        paddle = await initializePaddle({
+          environment: 'production', // Using production since you provided a live token
           token: 'live_71951c428556655f03ffe84ad86', // Your actual Paddle client-side token
-          eventCallback: function (event: any) {
-            console.log("Paddle event:", event);
+          eventCallback: (event) => {
+            console.log('Paddle event:', event);
           }
         });
         console.log('Paddle initialized successfully');
+      } catch (error) {
+        console.error('Paddle initialization error:', error);
       }
     };
 
-    // Check if Paddle is already loaded
-    if (typeof window !== 'undefined' && (window as any).Paddle) {
-      initializePaddle();
-    } else {
-      // Wait for Paddle to load
-      const checkPaddle = setInterval(() => {
-        if (typeof window !== 'undefined' && (window as any).Paddle) {
-          initializePaddle();
-          clearInterval(checkPaddle);
-        }
-      }, 100);
+    setupPaddle();
 
-      // Cleanup interval after 10 seconds
-      setTimeout(() => clearInterval(checkPaddle), 10000);
-    }
+    return () => {
+      // Cleanup if needed
+    };
   }, []);
 
-  const handleCheckout = (paddleProductId: string) => {
-    // Paddle v2 checkout integration
-    if (typeof window !== 'undefined' && (window as any).Paddle) {
-      try {
-        (window as any).Paddle.Checkout.open({
+  const handleCheckout = async (paddleProductId: string) => {
+    try {
+      const paddle = await initializePaddle({
+        environment: 'production',
+        token: 'live_71951c428556655f03ffe84ad86',
+      });
+
+      if (paddle) {
+        paddle.Checkout.open({
           items: [
             {
               priceId: paddleProductId,
@@ -102,14 +100,10 @@ const Pricing = () => {
             // email: 'customer@example.com'
           }
         });
-      } catch (error) {
-        console.error('Checkout error:', error);
-        alert('Unable to open checkout. Please try again.');
       }
-    } else {
-      console.error('Paddle.js not loaded or not initialized');
-      // Fallback: show error message to user
-      alert('Payment system is currently unavailable. Please try again later.');
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Unable to open checkout. Please try again.');
     }
   };
 
@@ -187,9 +181,6 @@ const Pricing = () => {
           </div>
         </div>
       </main>
-
-      {/* Paddle v2 Script */}
-      <script src="https://cdn.paddle.com/paddle/v2/paddle.js" />
     </div>
   );
 };
