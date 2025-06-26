@@ -1,5 +1,6 @@
 
-import { useEffect } from 'react';
+
+import { useEffect, useState } from 'react';
 import { initializePaddle, Paddle } from '@paddle/paddle-js';
 import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
@@ -7,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check } from 'lucide-react';
 
 const Pricing = () => {
+  const [paddle, setPaddle] = useState<Paddle>();
+
   const plans = [
     {
       name: 'Pro',
@@ -49,62 +52,32 @@ const Pricing = () => {
     },
   ];
 
+  // Download and initialize Paddle instance from CDN
   useEffect(() => {
-    let paddle: Paddle | undefined;
-
-    const setupPaddle = async () => {
-      try {
-        paddle = await initializePaddle({
-          environment: 'production', // Using production since you provided a live token
-          token: 'live_71951c428556655f03ffe84ad86', // Your actual Paddle client-side token
-          eventCallback: (event) => {
-            console.log('Paddle event:', event);
-          }
-        });
-        console.log('Paddle initialized successfully');
-      } catch (error) {
-        console.error('Paddle initialization error:', error);
-      }
-    };
-
-    setupPaddle();
-
-    return () => {
-      // Cleanup if needed
-    };
+    initializePaddle({ 
+      environment: 'production', 
+      token: 'live_71951c428556655f03ffe84ad86' 
+    }).then(
+      (paddleInstance: Paddle | undefined) => {
+        if (paddleInstance) {
+          setPaddle(paddleInstance);
+          console.log('Paddle initialized successfully');
+        }
+      },
+    );
   }, []);
 
-  const handleCheckout = async (paddleProductId: string) => {
-    try {
-      const paddle = await initializePaddle({
-        environment: 'production',
-        token: 'live_71951c428556655f03ffe84ad86',
-      });
-
-      if (paddle) {
-        paddle.Checkout.open({
-          items: [
-            {
-              priceId: paddleProductId,
-              quantity: 1
-            }
-          ],
-          settings: {
-            displayMode: 'overlay',
-            theme: 'light',
-            locale: 'en',
-            variant: 'one-page'
-          },
-          customer: {
-            // Optional: pre-fill customer information
-            // email: 'customer@example.com'
-          }
-        });
+  // Callback to open a checkout
+  const handleCheckout = (paddleProductId: string) => {
+    paddle?.Checkout.open({
+      items: [{ priceId: paddleProductId, quantity: 1 }],
+      settings: {
+        displayMode: 'overlay',
+        theme: 'light',
+        locale: 'en',
+        variant: 'one-page'
       }
-    } catch (error) {
-      console.error('Checkout error:', error);
-      alert('Unable to open checkout. Please try again.');
-    }
+    });
   };
 
   return (
@@ -186,3 +159,4 @@ const Pricing = () => {
 };
 
 export default Pricing;
+
