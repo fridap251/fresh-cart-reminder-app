@@ -1,14 +1,18 @@
 
-
 import { useEffect, useState } from 'react';
-import { initializePaddle, Paddle } from '@paddle/paddle-js';
 import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Check } from 'lucide-react';
 
+declare global {
+  interface Window {
+    Paddle: any;
+  }
+}
+
 const Pricing = () => {
-  const [paddle, setPaddle] = useState<Paddle>();
+  const [paddleReady, setPaddleReady] = useState(false);
 
   const plans = [
     {
@@ -26,7 +30,7 @@ const Pricing = () => {
         'Export capabilities',
         'Mobile app access',
       ],
-      paddleProductId: 'pri_01gsz8x8sawmvhz1pv30nge1ke', // Your actual Pro monthly product ID
+      paddleProductId: 'pri_01gsz8x8sawmvhz1pv30nge1ke',
       popular: true,
     },
     {
@@ -47,37 +51,35 @@ const Pricing = () => {
         'Future updates included',
         'Early access to new features',
       ],
-      paddleProductId: 'pri_01gsz8z1q1n00f12qt82y31smh', // Your actual Pro yearly product ID (using as family for now)
+      paddleProductId: 'pri_01gsz8z1q1n00f12qt82y31smh',
       popular: false,
     },
   ];
 
-  // Download and initialize Paddle instance from CDN
+  // Initialize Paddle with Sandbox Vendor ID
   useEffect(() => {
-    initializePaddle({ 
-      environment: 'production', 
-      token: 'live_71951c428556655f03ffe84ad86' 
-    }).then(
-      (paddleInstance: Paddle | undefined) => {
-        if (paddleInstance) {
-          setPaddle(paddleInstance);
-          console.log('Paddle initialized successfully');
-        }
-      },
-    );
+    if (window.Paddle) {
+      window.Paddle.Setup({ 
+        vendor: 33494
+      });
+      setPaddleReady(true);
+      console.log('Paddle initialized with vendor ID 33494');
+    }
   }, []);
 
   // Callback to open a checkout
   const handleCheckout = (paddleProductId: string) => {
-    paddle?.Checkout.open({
-      items: [{ priceId: paddleProductId, quantity: 1 }],
-      settings: {
-        displayMode: 'overlay',
-        theme: 'light',
-        locale: 'en',
-        variant: 'one-page'
-      }
-    });
+    if (window.Paddle && paddleReady) {
+      window.Paddle.Checkout.open({
+        items: [{ priceId: paddleProductId, quantity: 1 }],
+        settings: {
+          displayMode: 'overlay',
+          theme: 'light',
+          locale: 'en',
+          variant: 'one-page'
+        }
+      });
+    }
   };
 
   return (
@@ -159,4 +161,3 @@ const Pricing = () => {
 };
 
 export default Pricing;
-
