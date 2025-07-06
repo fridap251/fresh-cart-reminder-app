@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
@@ -12,12 +13,30 @@ declare global {
 
 const Pricing = () => {
   const [paddleReady, setPaddleReady] = useState(false);
+  const [billingPeriod, setBillingPeriod] = useState<'month' | 'year'>('year');
 
   const plans = [
     {
+      name: 'Starter',
+      monthlyPrice: 5,
+      yearlyPrice: 4, // 20% savings
+      period: billingPeriod,
+      description: 'Perfect for individuals getting started.',
+      features: [
+        'Up to 50 grocery items',
+        'Basic recurring patterns',
+        'Standard categories',
+        'Email notifications',
+        'Mobile app access',
+      ],
+      paddleProductId: billingPeriod === 'month' ? 'pri_starter_monthly' : 'pri_starter_yearly',
+      popular: false,
+    },
+    {
       name: 'Pro',
-      price: '$5',
-      period: 'per month',
+      monthlyPrice: 10,
+      yearlyPrice: 8, // 20% savings
+      period: billingPeriod,
       description: 'Perfect for individuals who want advanced grocery planning.',
       features: [
         'Unlimited grocery items',
@@ -29,29 +48,28 @@ const Pricing = () => {
         'Export capabilities',
         'Mobile app access',
       ],
-      paddleProductId: 'pri_01gsz8x8sawmvhz1pv30nge1ke',
+      paddleProductId: billingPeriod === 'month' ? 'pri_01gsz8x8sawmvhz1pv30nge1ke' : 'pri_pro_yearly',
       popular: true,
     },
     {
-      name: 'Family',
-      price: '$10',
-      period: 'per month',
-      description: 'Perfect for families and households.',
+      name: 'Enterprise',
+      monthlyPrice: null,
+      yearlyPrice: null,
+      period: billingPeriod,
+      description: 'Bespoke pricing for large organizations.',
       features: [
         'Everything in Pro',
-        'Unlimited family members',
-        'Multiple shopping lists',
-        'Family sharing & collaboration',
-        'Meal planning integration',
-        'Advanced notifications',
-        'Dedicated account manager',
-        'Custom integrations',
-        'Lifetime access',
-        'Future updates included',
-        'Early access to new features',
+        'Unlimited team members',
+        'Advanced integrations',
+        'Custom branding',
+        'Dedicated support',
+        'Custom reporting',
+        'API access',
+        'SLA guarantee',
       ],
-      paddleProductId: 'pri_01gsz8z1q1n00f12qt82y31smh',
+      paddleProductId: null,
       popular: false,
+      isEnterprise: true,
     },
   ];
 
@@ -77,7 +95,7 @@ const Pricing = () => {
 
   // Callback to open a checkout
   const handleCheckout = (paddleProductId: string) => {
-    if (window.Paddle && paddleReady) {
+    if (window.Paddle && paddleReady && paddleProductId) {
       try {
         window.Paddle.Checkout.open({
           items: [{ priceId: paddleProductId, quantity: 1 }],
@@ -90,7 +108,6 @@ const Pricing = () => {
           successCallback: (data: any) => {
             console.log('Payment successful:', data);
             // Handle successful payment here
-            // You might want to redirect to a success page or update user state
           },
           errorCallback: (error: any) => {
             console.error('Payment error:', error);
@@ -100,10 +117,19 @@ const Pricing = () => {
       } catch (error) {
         console.error('Checkout failed:', error);
       }
+    } else if (paddleProductId === null) {
+      // Handle enterprise contact
+      window.location.href = 'mailto:sales@groceryreminders.com?subject=Enterprise Inquiry';
     } else {
       console.log('Paddle not ready - showing fallback message');
       alert('Payment system is loading. Please try again in a moment.');
     }
+  };
+
+  const getPrice = (plan: typeof plans[0]) => {
+    if (plan.isEnterprise) return 'Contact us';
+    const price = billingPeriod === 'month' ? plan.monthlyPrice : plan.yearlyPrice;
+    return `$${price}`;
   };
 
   return (
@@ -115,15 +141,53 @@ const Pricing = () => {
           {/* Header */}
           <div className="text-center mb-16">
             <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-              Simple, Transparent Pricing
+              Choose your plan
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Choose the plan that fits your needs. 14-day money-back guarantee for all paid plans.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+              Simple, transparent pricing that grows with you. 14-day money-back guarantee.
             </p>
+
+            {/* Billing Toggle */}
+            <div className="flex items-center justify-center space-x-4 mb-8">
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="billing"
+                  value="month"
+                  checked={billingPeriod === 'month'}
+                  onChange={(e) => setBillingPeriod(e.target.value as 'month' | 'year')}
+                  className="sr-only"
+                />
+                <span className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  billingPeriod === 'month' 
+                    ? 'bg-primary text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}>
+                  Monthly
+                </span>
+              </label>
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="billing"
+                  value="year"
+                  checked={billingPeriod === 'year'}
+                  onChange={(e) => setBillingPeriod(e.target.value as 'month' | 'year')}
+                  className="sr-only"
+                />
+                <span className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  billingPeriod === 'year' 
+                    ? 'bg-primary text-white' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}>
+                  Yearly <sup className="text-xs">save 20%</sup>
+                </span>
+              </label>
+            </div>
           </div>
 
           {/* Pricing Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 max-w-5xl mx-auto">
             {plans.map((plan, index) => (
               <Card 
                 key={index} 
@@ -139,8 +203,15 @@ const Pricing = () => {
                 <CardHeader className="text-center pb-4">
                   <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
                   <div className="mt-4">
-                    <span className="text-4xl font-bold">{plan.price}</span>
-                    <span className="text-gray-600 ml-1">/ {plan.period}</span>
+                    <span className="text-4xl font-bold">{getPrice(plan)}</span>
+                    {!plan.isEnterprise && (
+                      <span className="text-gray-600 ml-1">
+                        / per user {billingPeriod === 'month' ? 'monthly' : 'yearly'}
+                      </span>
+                    )}
+                    {plan.isEnterprise && (
+                      <div className="text-gray-600 text-sm mt-1">bespoke pricing</div>
+                    )}
                   </div>
                   <p className="text-gray-600 mt-2">{plan.description}</p>
                 </CardHeader>
@@ -149,9 +220,14 @@ const Pricing = () => {
                     className={`w-full mb-6 ${plan.popular ? 'bg-primary' : ''}`}
                     variant={plan.popular ? 'default' : 'outline'}
                     onClick={() => handleCheckout(plan.paddleProductId)}
-                    disabled={!paddleReady}
+                    disabled={!paddleReady && !plan.isEnterprise}
                   >
-                    {paddleReady ? 'Get Started' : 'Loading...'}
+                    {plan.isEnterprise 
+                      ? 'Inquire now' 
+                      : paddleReady 
+                        ? 'Sign up now' 
+                        : 'Loading...'
+                    }
                   </Button>
                   
                   <div className="space-y-3">
@@ -168,12 +244,22 @@ const Pricing = () => {
           </div>
 
           {/* FAQ Section */}
-          <div className="text-center">
+          <div className="text-center border-t pt-16">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
               Questions? We're here to help.
             </h2>
             <p className="text-gray-600 mb-8">
               We offer a 14-day money-back guarantee for all paid plans. If you're not satisfied within the first 14 days, contact our support team for a full refund.
+            </p>
+            <p className="text-sm text-gray-500 mb-6">
+              For the tutorial, check out:{' '}
+              <a href="https://developer.paddle.com/build/checkout/build-pricing-page?utm_source=dx&utm_medium=codepen" className="text-primary hover:underline">
+                Build a pricing page
+              </a>{' '}
+              -{' '}
+              <a href="https://developer.paddle.com/?utm_source=dx&utm_medium=codepen" className="text-primary hover:underline">
+                developer.paddle.com
+              </a>
             </p>
             <Button variant="outline">
               <a href="/faqs">View All FAQs</a>
