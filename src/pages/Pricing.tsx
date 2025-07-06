@@ -56,29 +56,54 @@ const Pricing = () => {
     },
   ];
 
-  // Initialize Paddle with Sandbox Vendor ID
+  // Initialize Paddle with the newer v2 API
   useEffect(() => {
     if (window.Paddle) {
-      window.Paddle.Setup({ 
-        vendor: 33494
-      });
-      setPaddleReady(true);
-      console.log('Paddle initialized with vendor ID 33494');
+      try {
+        // For testing, we'll use a sandbox seller ID
+        // Replace with your actual seller ID in production
+        window.Paddle.Initialize({
+          token: 'test_' + '33494', // This is a test format for sandbox
+          sandbox: true // Enable sandbox mode for testing
+        });
+        setPaddleReady(true);
+        console.log('Paddle v2 initialized successfully');
+      } catch (error) {
+        console.error('Paddle initialization failed:', error);
+        // Fallback to basic display without checkout functionality
+        setPaddleReady(false);
+      }
     }
   }, []);
 
   // Callback to open a checkout
   const handleCheckout = (paddleProductId: string) => {
     if (window.Paddle && paddleReady) {
-      window.Paddle.Checkout.open({
-        items: [{ priceId: paddleProductId, quantity: 1 }],
-        settings: {
-          displayMode: 'overlay',
-          theme: 'light',
-          locale: 'en',
-          variant: 'one-page'
-        }
-      });
+      try {
+        window.Paddle.Checkout.open({
+          items: [{ priceId: paddleProductId, quantity: 1 }],
+          settings: {
+            displayMode: 'overlay',
+            theme: 'light',
+            locale: 'en',
+            variant: 'one-page'
+          },
+          successCallback: (data: any) => {
+            console.log('Payment successful:', data);
+            // Handle successful payment here
+            // You might want to redirect to a success page or update user state
+          },
+          errorCallback: (error: any) => {
+            console.error('Payment error:', error);
+            // Handle payment errors here
+          }
+        });
+      } catch (error) {
+        console.error('Checkout failed:', error);
+      }
+    } else {
+      console.log('Paddle not ready - showing fallback message');
+      alert('Payment system is loading. Please try again in a moment.');
     }
   };
 
@@ -125,8 +150,9 @@ const Pricing = () => {
                     className={`w-full mb-6 ${plan.popular ? 'bg-primary' : ''}`}
                     variant={plan.popular ? 'default' : 'outline'}
                     onClick={() => handleCheckout(plan.paddleProductId)}
+                    disabled={!paddleReady}
                   >
-                    Get Started
+                    {paddleReady ? 'Get Started' : 'Loading...'}
                   </Button>
                   
                   <div className="space-y-3">
