@@ -55,15 +55,18 @@ const Pricing = () => {
     },
   ];
 
-  // Initialize Paddle with your live token
+  // Initialize Paddle with your live token and customer ID
   useEffect(() => {
     if (window.Paddle) {
       try {
         window.Paddle.Initialize({
-          token: 'live_7d279f61a3499fed520f7cd8c08'
+          token: 'live_7d279f61a3499fed520f7cd8c08',
+          pwCustomer: {
+            id: 'ctm_01gt25aq4b2zcfw12szwtjrbdt'
+          }
         });
         setPaddleReady(true);
-        console.log('Paddle v2 initialized successfully with live token');
+        console.log('Paddle v2 initialized successfully with live token and customer ID');
       } catch (error) {
         console.error('Paddle initialization failed:', error);
         // Fallback to basic display without checkout functionality
