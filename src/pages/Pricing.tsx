@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
@@ -56,18 +55,15 @@ const Pricing = () => {
     },
   ];
 
-  // Initialize Paddle with the newer v2 API
+  // Initialize Paddle with your live token
   useEffect(() => {
     if (window.Paddle) {
       try {
-        // For testing, we'll use a sandbox seller ID
-        // Replace with your actual seller ID in production
         window.Paddle.Initialize({
-          token: 'test_' + '33494', // This is a test format for sandbox
-          sandbox: true // Enable sandbox mode for testing
+          token: 'live_7d279f61a3499fed520f7cd8c08'
         });
         setPaddleReady(true);
-        console.log('Paddle v2 initialized successfully');
+        console.log('Paddle v2 initialized successfully with live token');
       } catch (error) {
         console.error('Paddle initialization failed:', error);
         // Fallback to basic display without checkout functionality
