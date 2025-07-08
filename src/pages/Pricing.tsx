@@ -29,7 +29,7 @@ const Pricing = () => {
         'Email notifications',
         'Mobile app access',
       ],
-      paddleProductId: billingPeriod === 'month' ? 'pri_starter_monthly' : 'pri_starter_yearly',
+      paddleProductId: billingPeriod === 'month' ? 'pri_01jh4c3vz5twhe6rh5jxjzqxyz' : 'pri_01jh4c4f1wkzgv2m8q7nbpxqrs', // Replace with your actual Paddle price IDs
       popular: false,
     },
     {
@@ -48,7 +48,7 @@ const Pricing = () => {
         'Export capabilities',
         'Mobile app access',
       ],
-      paddleProductId: billingPeriod === 'month' ? 'pri_01gsz8x8sawmvhz1pv30nge1ke' : 'pri_pro_yearly',
+      paddleProductId: billingPeriod === 'month' ? 'pri_01jh4c5k9xwqj2n7r6smtzpqst' : 'pri_01jh4c6m8ywrv3k4q9tnulqrsx', // Replace with your actual Paddle price IDs
       popular: true,
     },
     {
@@ -85,6 +85,10 @@ const Pricing = () => {
         });
         setPaddleReady(true);
         console.log('Paddle v2 initialized successfully with live token and customer ID');
+        // Add a toast notification for successful initialization
+        if (typeof window !== 'undefined' && window.Paddle) {
+          console.log('✅ Paddle is ready to process payments');
+        }
       } catch (error) {
         console.error('Paddle initialization failed:', error);
         // Fallback to basic display without checkout functionality
