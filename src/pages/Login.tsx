@@ -75,14 +75,14 @@ const Login = () => {
               <CardTitle className="text-center">Sign In</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <Button 
                   type="button" 
                   variant="outline" 
                   className="w-full"
                   onClick={async () => {
                     const { error } = await supabase.auth.signInWithOAuth({
-                      provider: 'azure',
+                      provider: 'google',
                       options: {
                         redirectTo: `${window.location.origin}/`
                       }
@@ -96,7 +96,30 @@ const Login = () => {
                     }
                   }}
                 >
-                  Continue with Microsoft
+                  Continue with Google
+                </Button>
+
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={async () => {
+                    const { error } = await supabase.auth.signInWithOAuth({
+                      provider: 'github',
+                      options: {
+                        redirectTo: `${window.location.origin}/`
+                      }
+                    });
+                    if (error) {
+                      toast({
+                        title: "Error",
+                        description: error.message,
+                        variant: "destructive",
+                      });
+                    }
+                  }}
+                >
+                  Continue with GitHub
                 </Button>
                 
                 <div className="relative">
