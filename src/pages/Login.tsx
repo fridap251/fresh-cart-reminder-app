@@ -75,65 +75,6 @@ const Login = () => {
               <CardTitle className="text-center">Sign In</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={async () => {
-                    const { error } = await supabase.auth.signInWithOAuth({
-                      provider: 'google',
-                      options: {
-                        redirectTo: `${window.location.origin}/`
-                      }
-                    });
-                    if (error) {
-                      toast({
-                        title: "Error",
-                        description: error.message,
-                        variant: "destructive",
-                      });
-                    }
-                  }}
-                >
-                  Continue with Google
-                </Button>
-
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  className="w-full"
-                  onClick={async () => {
-                    const { error } = await supabase.auth.signInWithOAuth({
-                      provider: 'github',
-                      options: {
-                        redirectTo: `${window.location.origin}/`
-                      }
-                    });
-                    if (error) {
-                      toast({
-                        title: "Error",
-                        description: error.message,
-                        variant: "destructive",
-                      });
-                    }
-                  }}
-                >
-                  Continue with GitHub
-                </Button>
-                
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">
-                      Or continue with email
-                    </span>
-                  </div>
-                </div>
-              </div>
-
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <Label htmlFor="email">Email</Label>
